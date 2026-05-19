@@ -1,6 +1,6 @@
-# Mosaico - Imitacion de Pinterest
+# Imitacion de Pinterest
 
-Aplicacion web full-stack para publicar, editar, reemplazar, eliminar y descubrir imagenes en un mosaico responsivo inspirado en Pinterest. El proyecto usa React con Vite en el frontend, FastAPI en el backend, PostgreSQL como base de datos obligatoria y Unsplash como API externa consumida desde la API propia.
+Aplicacion web full-stack para publicar, editar, reemplazar, eliminar y descubrir imagenes en un mosaico responsivo inspirado en Pinterest. El proyecto usa React con Vite en el frontend, FastAPI en el backend, PostgreSQL como base de datos obligatoria y Unsplash como API externa consumida desde la API propia para las imagenes aleatorias de la pagina.
 
 ## Resumen del producto
 
