@@ -2,6 +2,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8080
 const POSTS_CACHE_KEY = "mosaico.posts.cache";
 const POSTS_SYNC_KEY = "mosaico.posts.syncedAt";
 const CURRENT_USER_KEY = "mosaico.currentUser";
+const SIGNED_OUT_USERS_KEY = "mosaico.signedOutUsers";
 
 export function getCurrentUser() {
   try {
@@ -18,6 +19,27 @@ export function setCurrentUser(user) {
     sessionStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
   }
   window.dispatchEvent(new Event("current-user-updated"));
+}
+
+export function getSignedOutUserIds() {
+  try {
+    return JSON.parse(sessionStorage.getItem(SIGNED_OUT_USERS_KEY) || "[]");
+  } catch {
+    return [];
+  }
+}
+
+export function signOutUser(userId) {
+  if (!userId) {
+    setCurrentUser(null);
+    return;
+  }
+
+  const signedOutIds = new Set(getSignedOutUserIds());
+  signedOutIds.add(userId);
+  sessionStorage.setItem(SIGNED_OUT_USERS_KEY, JSON.stringify(Array.from(signedOutIds)));
+  window.dispatchEvent(new Event("signed-out-users-updated"));
+  setCurrentUser(null);
 }
 
 export function readCachedPosts() {
@@ -63,8 +85,9 @@ function buildUrl(path, params = {}) {
 }
 
 async function apiFetch(path, options = {}) {
+  const isFormData = options.body instanceof FormData;
   const headers = {
-    ...(options.body ? { "Content-Type": "application/json" } : {}),
+    ...(!isFormData && options.body ? { "Content-Type": "application/json" } : {}),
     ...options.headers,
   };
 
@@ -76,7 +99,7 @@ async function apiFetch(path, options = {}) {
   const response = await fetch(path.startsWith("http") ? path : `${API_BASE_URL}${path}`, {
     ...options,
     headers,
-    body: options.body ? JSON.stringify(options.body) : undefined,
+    body: options.body ? (isFormData ? options.body : JSON.stringify(options.body)) : undefined,
   });
 
   if (!response.ok) {
@@ -118,6 +141,14 @@ export const postsApi = {
   },
   discover(count = 12) {
     return apiFetch(buildUrl("/discover", { count }));
+  },
+};
+
+export const uploadsApi = {
+  uploadImage(file) {
+    const formData = new FormData();
+    formData.append("file", file);
+    return apiFetch("/uploads", { method: "POST", body: formData });
   },
 };
 

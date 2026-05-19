@@ -18,6 +18,7 @@ Thumbs.db
 # Local database files
 *.db
 *.sqlite
+backend/uploads/
 
 # Packaged/exported copies
 *.zip

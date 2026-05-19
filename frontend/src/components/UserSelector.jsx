@@ -1,66 +1,47 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Save, UserPlus } from "lucide-react";
-import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { LogOut, Save } from "lucide-react";
+import { useEffect, useState } from "react";
 
-import { usersApi } from "../api/client.js";
+import { getSignedOutUserIds, signOutUser, usersApi } from "../api/client.js";
 import useCurrentUser from "../hooks/useCurrentUser.js";
 
 export default function UserSelector() {
   const [currentUser, saveCurrentUser] = useCurrentUser();
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const queryClient = useQueryClient();
+  const [signedOutIds, setSignedOutIds] = useState(() => getSignedOutUserIds());
 
   const usersQuery = useQuery({
     queryKey: ["users"],
     queryFn: usersApi.listUsers,
   });
 
-  const createUserMutation = useMutation({
-    mutationFn: usersApi.createUser,
-    onSuccess: (user) => {
-      saveCurrentUser(user);
-      setUsername("");
-      setEmail("");
-      queryClient.invalidateQueries({ queryKey: ["users"] });
-    },
-  });
+  useEffect(() => {
+    function syncSignedOutUsers() {
+      setSignedOutIds(getSignedOutUserIds());
+    }
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    createUserMutation.mutate({ username, email });
+    window.addEventListener("signed-out-users-updated", syncSignedOutUsers);
+    window.addEventListener("storage", syncSignedOutUsers);
+
+    return () => {
+      window.removeEventListener("signed-out-users-updated", syncSignedOutUsers);
+      window.removeEventListener("storage", syncSignedOutUsers);
+    };
+  }, []);
+
+  const availableUsers =
+    usersQuery.data?.filter((user) => !signedOutIds.includes(user.id)) || [];
+
+  function handleSignOut() {
+    if (currentUser?.id) {
+      signOutUser(currentUser.id);
+      setSignedOutIds(getSignedOutUserIds());
+    } else {
+      saveCurrentUser(null);
+    }
   }
 
   return (
     <div className="user-panel">
-      <form className="user-form" onSubmit={handleSubmit}>
-        <input
-          required
-          aria-label="Nombre de usuario"
-          className="form-control form-control-sm"
-          placeholder="usuario"
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
-        />
-        <input
-          required
-          aria-label="Correo"
-          className="form-control form-control-sm"
-          placeholder="correo"
-          type="email"
-          value={email}
-          onChange={(event) => setEmail(event.target.value)}
-        />
-        <button
-          className="btn btn-dark btn-sm icon-btn"
-          type="submit"
-          title="Crear usuario"
-          disabled={createUserMutation.isPending}
-        >
-          <UserPlus size={15} />
-        </button>
-      </form>
-
       <div className="user-current-row">
         <select
           aria-label="Seleccionar usuario"
@@ -72,7 +53,7 @@ export default function UserSelector() {
           }}
         >
           <option value="">Sin usuario</option>
-          {usersQuery.data?.map((user) => (
+          {availableUsers.map((user) => (
             <option key={user.id} value={user.id}>
               {user.username}
             </option>
@@ -82,11 +63,16 @@ export default function UserSelector() {
           <Save size={13} />
           {currentUser?.username || "Ninguno"}
         </span>
+        <button
+          className="btn btn-outline-dark btn-sm icon-btn"
+          type="button"
+          title="Sign out"
+          disabled={!currentUser?.id}
+          onClick={handleSignOut}
+        >
+          <LogOut size={15} />
+        </button>
       </div>
-
-      {createUserMutation.error && (
-        <span className="user-error">{createUserMutation.error.message}</span>
-      )}
     </div>
   );
 }

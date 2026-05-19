@@ -1,4 +1,4 @@
-import { Compass, Grid3X3, ImagePlus, Images, UserRound } from "lucide-react";
+import { Compass, Grid3X3, ImagePlus, Images, UserPlus, UserRound } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 import UserSelector from "./UserSelector.jsx";
@@ -30,6 +30,10 @@ export default function Layout({ children }) {
               <NavLink to="/mine" className="nav-pill">
                 <Images size={17} />
                 Mis posts
+              </NavLink>
+              <NavLink to="/users" className="nav-pill">
+                <UserPlus size={17} />
+                Agregar usuario
               </NavLink>
             </div>
 
