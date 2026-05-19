@@ -31,7 +31,7 @@ export default function DiscoverPage() {
       <div className="page-heading">
         <div>
           <p className="eyebrow">Unsplash desde backend</p>
-          <h1>Descubrimiento</h1>
+          <h1>Nuevas ideas</h1>
         </div>
         <button className="btn btn-outline-dark" type="button" onClick={() => discoverQuery.refetch()}>
           <RefreshCcw size={17} />
