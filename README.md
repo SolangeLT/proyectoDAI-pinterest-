@@ -1,4 +1,4 @@
-# Mosaico - Imitacion de Pinterest
+# Imitacion de Pinterest
 
 Este proyecto es una aplicacion web full-stack hecha para una materia de la universidad. La idea fue crear una pagina inspirada en Pinterest, donde se puedan publicar imagenes, verlas en un mosaico, editar posts, eliminarlos y descubrir imagenes externas.
 
