@@ -77,9 +77,8 @@ export default function HomePage() {
       <div className="page-heading">
         <div>
           <p className="eyebrow">Feed principal</p>
-          <h1>Mosaico visual</h1>
+          <h1>Para ti</h1>
         </div>
-        <p className="heading-note">Posts desde tu API propia, con cache local y paginacion.</p>
       </div>
 
       <ErrorState error={postsQuery.error || deleteMutation.error} />

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { LogOut, Save } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { getSignedOutUserIds, signOutUser, usersApi } from "../api/client.js";
@@ -59,10 +59,6 @@ export default function UserSelector() {
             </option>
           ))}
         </select>
-        <span className="current-user-badge" title={currentUser?.email || "Sin usuario activo"}>
-          <Save size={13} />
-          {currentUser?.username || "Ninguno"}
-        </span>
         <button
           className="btn btn-outline-dark btn-sm icon-btn"
           type="button"
