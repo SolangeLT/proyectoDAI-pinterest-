@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { mergePostCache, postsApi } from "../api/client.js";
+import { mergePostCache, postsApi, uploadsApi } from "../api/client.js";
 import PostForm from "../components/PostForm.jsx";
 import { ErrorState, LoadingState } from "../components/StatusMessage.jsx";
 
@@ -18,14 +18,20 @@ export default function PostFormPage() {
   });
 
   const saveMutation = useMutation({
-    mutationFn: ({ intent, payload }) => {
+    mutationFn: async ({ intent, payload, imageFile }) => {
+      const nextPayload = { ...payload };
+      if (imageFile) {
+        const upload = await uploadsApi.uploadImage(imageFile);
+        nextPayload.image_url = upload.image_url;
+      }
+
       if (intent === "create") {
-        return postsApi.createPost(payload);
+        return postsApi.createPost(nextPayload);
       }
       if (intent === "replace") {
-        return postsApi.replacePost(id, payload);
+        return postsApi.replacePost(id, nextPayload);
       }
-      return postsApi.patchPost(id, payload);
+      return postsApi.patchPost(id, nextPayload);
     },
     onSuccess: (post) => {
       mergePostCache([post]);

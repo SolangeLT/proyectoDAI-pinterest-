@@ -37,7 +37,7 @@ export default function MyPostsPage() {
       <ErrorState error={postsQuery.error || deleteMutation.error} />
 
       {!currentUser?.id && (
-        <EmptyState text="Crea o selecciona un usuario en la barra superior para ver tus posts." />
+        <EmptyState text="Crea o selecciona un usuario en Agregar usuario para ver tus posts." />
       )}
 
       {postsQuery.isLoading && <LoadingState />}

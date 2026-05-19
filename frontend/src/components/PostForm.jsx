@@ -31,23 +31,46 @@ function textToTags(text) {
 export default function PostForm({ initialValues, isEditing, isSubmitting, onSubmit }) {
   const [currentUser] = useCurrentUser();
   const [imageUrl, setImageUrl] = useState("");
+  const [imageFile, setImageFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState("");
   const [createdAt, setCreatedAt] = useState(nowForInput());
   const [tags, setTags] = useState("");
+  const [formError, setFormError] = useState("");
 
   useEffect(() => {
     if (initialValues) {
       setImageUrl(initialValues.image_url || "");
+      setImageFile(null);
       setCreatedAt(toDatetimeLocal(initialValues.created_at));
       setTags(tagsToText(initialValues.tags));
     }
   }, [initialValues]);
 
+  useEffect(() => {
+    if (!imageFile) {
+      setPreviewUrl("");
+      return undefined;
+    }
+
+    const objectUrl = URL.createObjectURL(imageFile);
+    setPreviewUrl(objectUrl);
+
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [imageFile]);
+
   function submit(event, intent) {
     event.preventDefault();
+    if (!imageFile && !imageUrl.trim()) {
+      setFormError("Sube una imagen o pega un link directo antes de guardar.");
+      return;
+    }
+
+    setFormError("");
     onSubmit({
       intent,
+      imageFile,
       payload: {
-        image_url: imageUrl,
+        image_url: imageUrl.trim(),
         created_at: createdAt ? new Date(createdAt).toISOString() : null,
         tags: textToTags(tags),
       },
@@ -60,21 +83,39 @@ export default function PostForm({ initialValues, isEditing, isSubmitting, onSub
     <form className="editor-panel" onSubmit={(event) => submit(event, "patch")}>
       {!currentUser?.id && (
         <div className="alert alert-warning">
-          Crea o selecciona un usuario en la barra superior para crear o modificar posts.
+          Crea o selecciona un usuario en Agregar usuario para crear o modificar posts.
         </div>
       )}
 
       <div className="mb-3">
-        <label className="form-label" htmlFor="imageUrl">
-          Link a imagen
+        <label className="form-label" htmlFor="imageFile">
+          Subir imagen
         </label>
         <input
-          required
+          id="imageFile"
+          className="form-control"
+          type="file"
+          accept="image/jpeg,image/png,image/webp,image/gif"
+          onChange={(event) => {
+            setImageFile(event.target.files?.[0] || null);
+            setFormError("");
+          }}
+        />
+      </div>
+
+      <div className="mb-3">
+        <label className="form-label" htmlFor="imageUrl">
+          Link directo a imagen
+        </label>
+        <input
           id="imageUrl"
           className="form-control"
           type="url"
           value={imageUrl}
-          onChange={(event) => setImageUrl(event.target.value)}
+          onChange={(event) => {
+            setImageUrl(event.target.value);
+            setFormError("");
+          }}
           placeholder="https://..."
         />
       </div>
@@ -107,9 +148,11 @@ export default function PostForm({ initialValues, isEditing, isSubmitting, onSub
         </div>
       </div>
 
-      {imageUrl && (
+      {formError && <div className="alert alert-danger mt-3">{formError}</div>}
+
+      {(previewUrl || imageUrl) && (
         <div className="preview-strip mt-4">
-          <img src={imageUrl} alt="Vista previa" />
+          <img src={previewUrl || imageUrl} alt="Vista previa" />
         </div>
       )}
 

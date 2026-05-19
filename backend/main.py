@@ -2,14 +2,17 @@ import os
 from contextlib import contextmanager
 from datetime import datetime
 from math import ceil
+from pathlib import Path
 from typing import Annotated
 from uuid import UUID, uuid4
 
 import httpx
 import psycopg
 from dotenv import load_dotenv
-from fastapi import FastAPI, Header, HTTPException, Query, status
+from fastapi import FastAPI, File, Header, HTTPException, Query, Request, UploadFile, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 
 from database import check_database, get_connection, init_db
 from models import DiscoverPhoto, HealthOut, PostCreate, PostOut, PostPatch, PostsPage, UserCreate, UserOut
@@ -18,6 +21,17 @@ from models import DiscoverPhoto, HealthOut, PostCreate, PostOut, PostPatch, Pos
 load_dotenv()
 
 app = FastAPI(title="Mosaico API", version="1.0.0")
+UPLOAD_DIR = Path(__file__).resolve().parent / "uploads"
+UPLOAD_DIR.mkdir(exist_ok=True)
+
+ALLOWED_IMAGE_TYPES = {
+    "image/jpeg": ".jpg",
+    "image/png": ".png",
+    "image/webp": ".webp",
+    "image/gif": ".gif",
+}
+
+app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
 allowed_origins = [
     origin.strip()
@@ -167,8 +181,28 @@ POST_SELECT_SQL = """
 
 
 @app.get("/", include_in_schema=False)
-def root() -> dict[str, str]:
-    return {"message": "Mosaico API is running"}
+def root() -> RedirectResponse:
+    return RedirectResponse(url="/docs")
+
+
+@app.post("/uploads", status_code=status.HTTP_201_CREATED)
+async def upload_image(request: Request, file: UploadFile = File(...)) -> dict[str, str]:
+    extension = ALLOWED_IMAGE_TYPES.get(file.content_type or "")
+    if extension is None:
+        raise HTTPException(
+            status_code=400,
+            detail="Only JPEG, PNG, WEBP and GIF images are allowed",
+        )
+
+    contents = await file.read()
+    if not contents:
+        raise HTTPException(status_code=400, detail="Image file is empty")
+
+    filename = f"{uuid4()}{extension}"
+    destination = UPLOAD_DIR / filename
+    destination.write_bytes(contents)
+
+    return {"image_url": str(request.url_for("uploads", path=filename))}
 
 
 @app.get("/users", response_model=list[UserOut])

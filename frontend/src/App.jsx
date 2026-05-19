@@ -6,6 +6,7 @@ import HomePage from "./pages/HomePage.jsx";
 import MyPostsPage from "./pages/MyPostsPage.jsx";
 import PostDetailPage from "./pages/PostDetailPage.jsx";
 import PostFormPage from "./pages/PostFormPage.jsx";
+import UsersPage from "./pages/UsersPage.jsx";
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
         <Route path="/posts/:id/edit" element={<PostFormPage />} />
         <Route path="/discover" element={<DiscoverPage />} />
         <Route path="/mine" element={<MyPostsPage />} />
+        <Route path="/users" element={<UsersPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>
