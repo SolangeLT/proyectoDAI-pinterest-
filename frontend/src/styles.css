@@ -106,7 +106,7 @@ a {
 
 .user-current-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 0.35rem;
   align-items: center;
 }
@@ -289,14 +289,9 @@ a {
 
 .account-switcher {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 0.6rem;
   align-items: end;
-}
-
-.account-badge {
-  min-height: 38px;
-  max-width: 180px;
 }
 
 .preview-strip {
@@ -396,7 +391,4 @@ a {
     align-items: stretch;
   }
 
-  .account-badge {
-    max-width: 100%;
-  }
 }
