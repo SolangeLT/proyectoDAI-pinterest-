@@ -151,9 +151,9 @@ Sugerencia para Render:
 
 Enlaces de entrega:
 
-- Cliente desplegado: http://localhost:5173/
-- Health endpoint desplegado: http://127.0.0.1:8080/health
-- endpoint FastAPI desplegado: http://127.0.0.1:8080/docs#/
+- Cliente desplegado: [http://localhost:5173/](https://proyectodai-pinterest-1.onrender.com/)
+- Health endpoint desplegado: [http://127.0.0.1:8080/health](https://proyectodai-pinterest-8rux.onrender.com/health)
+- endpoint FastAPI desplegado: [http://127.0.0.1:8080/docs#/](https://proyectodai-pinterest-8rux.onrender.com/docs)
 
 ## Autor
 
