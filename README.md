@@ -1,10 +1,10 @@
 # Imitacion de Pinterest
 
-Este proyecto es una aplicacion web full-stack hecha para una materia de la universidad. La idea fue crear una pagina inspirada en Pinterest, donde se puedan publicar imagenes, verlas en un mosaico, editar posts, eliminarlos y descubrir imagenes externas.
+Este proyecto es una aplicacion web que esta inspirada en Pinterest, donde se puedan publicar imagenes, verlas en un mosaico, editar posts, eliminarlos y descubrir imagenes externas.
 
 El proyecto usa React con Vite en el frontend, FastAPI en el backend, PostgreSQL como base de datos y Unsplash como API externa consumida desde mi propia API. Tambien agregue carga de imagenes desde archivo para que no dependa solamente de pegar links.
 
-## Resumen del producto
+## Resumen del proyecto
 
 Mosaico permite dar de alta usuarios con nombre y correo desde la pestana **Agregar usuario**. Cada usuario puede crear posts con una imagen subida desde su computadora o con un link directo a una imagen. Los posts tambien pueden tener fecha de alta y etiquetas.
 
@@ -14,7 +14,7 @@ Tambien se puede cambiar de usuario desde el selector de la barra superior. El b
 
 Tambien incluye un apartado de descubrimiento que llama a Unsplash desde el backend y transforma la respuesta para regresar solo los datos necesarios para renderizar la foto.
 
-## Tecnologias
+## Que se uso
 
 - Frontend: React, Vite, Bootstrap 5.3, React Router, TanStack Query.
 - Backend: FastAPI, Pydantic, SQL directo con `psycopg`.
@@ -78,13 +78,7 @@ fastapi dev main.py --port 8080
 
 Al abrir la API local se muestra Swagger para poder probar los endpoints:
 
-```text
-http://127.0.0.1:8080
 ```
-
-La ruta anterior redirige a:
-
-```text
 http://127.0.0.1:8080/docs
 ```
 
@@ -157,28 +151,10 @@ Sugerencia para Render:
 
 Enlaces de entrega:
 
-- Cliente desplegado: pendiente.
-- Health endpoint desplegado: pendiente.
+- Cliente desplegado: [http://localhost:5173/](https://proyectodai-pinterest-1.onrender.com/)
+- Health endpoint desplegado: [http://127.0.0.1:8080/health](https://proyectodai-pinterest-8rux.onrender.com/health)
+- endpoint FastAPI desplegado: [http://127.0.0.1:8080/docs#/](https://proyectodai-pinterest-8rux.onrender.com/docs)
 
-## Autores
+## Autor
 
-- Nombre 1
-- Nombre 2
-- Nombre 3
-- Nombre 4
-
-## Pruebas sugeridas
-
-- Crear usuario desde la pestana Agregar usuario.
-- Seleccionar ese usuario y crear un post.
-- Crear un post subiendo una imagen local.
-- Crear un post usando un link directo a imagen.
-- Ver el detalle en `/posts/:id`.
-- Editar con `PATCH` y reemplazar con `PUT`.
-- Eliminar con el usuario creador.
-- Intentar editar/eliminar con otro usuario y confirmar respuesta `403`.
-- Probar paginacion del feed.
-- Revisar que el feed guarde cache y timestamp en `localStorage`.
-- Entrar a `/discover` y confirmar que las fotos vienen de Unsplash via backend.
-- Entrar a `http://127.0.0.1:8080` y confirmar que abre la documentacion Swagger.
-- Verificar OpenGraph con el URL desplegado.
+- Solange Lejeune T
