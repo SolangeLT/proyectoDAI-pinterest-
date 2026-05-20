@@ -4,7 +4,7 @@ Este proyecto es una aplicacion web que esta inspirada en Pinterest, donde se pu
 
 El proyecto usa React con Vite en el frontend, FastAPI en el backend, PostgreSQL como base de datos y Unsplash como API externa consumida desde mi propia API. Tambien agregue carga de imagenes desde archivo para que no dependa solamente de pegar links.
 
-## Resumen del producto
+## Resumen del proyecto
 
 Mosaico permite dar de alta usuarios con nombre y correo desde la pestana **Agregar usuario**. Cada usuario puede crear posts con una imagen subida desde su computadora o con un link directo a una imagen. Los posts tambien pueden tener fecha de alta y etiquetas.
 
@@ -14,7 +14,7 @@ Tambien se puede cambiar de usuario desde el selector de la barra superior. El b
 
 Tambien incluye un apartado de descubrimiento que llama a Unsplash desde el backend y transforma la respuesta para regresar solo los datos necesarios para renderizar la foto.
 
-## Tecnologias
+## Que se uso
 
 - Frontend: React, Vite, Bootstrap 5.3, React Router, TanStack Query.
 - Backend: FastAPI, Pydantic, SQL directo con `psycopg`.
